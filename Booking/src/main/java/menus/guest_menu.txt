@@ -1,0 +1,5 @@
+- 1. Online-board
+- 2. Show the flight info
+- 3. Login
+- 4. Register
+- 5. Exit

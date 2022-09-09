@@ -1,0 +1,7 @@
+- 1. Online-board
+- 2. Show the flight info
+- 3. Search and book a flight
+- 4. Cancel the booking
+- 5. My Flights
+- 6. Logout
+- 7. Exit

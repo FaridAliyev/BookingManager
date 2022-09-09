@@ -6,16 +6,16 @@ import java.util.UUID;
 
 public class User implements Serializable {
     private final UUID id;
-    private String login;
+    private String username;
     private String password;
 
     private User() {
         this.id = UUID.randomUUID();
     }
 
-    public User(String login, String password) {
+    public User(String username, String password) {
         this();
-        this.login = login;
+        this.username = username;
         this.password = password;
     }
 
@@ -23,12 +23,12 @@ public class User implements Serializable {
         return id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -44,11 +44,11 @@ public class User implements Serializable {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return getId().equals(user.getId()) && getLogin().equals(user.getLogin()) && getPassword().equals(user.getPassword());
+        return getId().equals(user.getId()) && getUsername().equals(user.getUsername()) && getPassword().equals(user.getPassword());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLogin(), getPassword());
+        return Objects.hash(getId(), getUsername(), getPassword());
     }
 }
