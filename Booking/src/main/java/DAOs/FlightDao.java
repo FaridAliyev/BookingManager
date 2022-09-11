@@ -1,7 +1,6 @@
 package DAOs;
 
 import entities.Flight;
-import entities.User;
 
 import java.util.List;
 import java.util.Optional;

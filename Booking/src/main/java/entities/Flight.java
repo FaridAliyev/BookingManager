@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class Flight implements Serializable {
         this.id = UUID.randomUUID();
     }
 
-    public Flight(Airport from, Airport to, Airline airline, int capacity, LocalDateTime departure, LocalDateTime arrival, List<Passenger> passengers) {
+    public Flight(Airport from, Airport to, Airline airline, int capacity, LocalDateTime departure, LocalDateTime arrival) {
         this();
         this.from = from;
         this.to = to;
@@ -28,7 +29,7 @@ public class Flight implements Serializable {
         this.capacity = capacity;
         this.departure = departure;
         this.arrival = arrival;
-        this.passengers = passengers;
+        this.passengers = new ArrayList<>();
     }
 
     public UUID getId() {

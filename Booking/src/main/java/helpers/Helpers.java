@@ -4,14 +4,15 @@ import entities.User;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Helpers {
-    public static Optional<List<String>> readFile(String fileName) {
-        File file = new File(fileName);
+    public static Optional<List<String>> readFile(String filePath) {
+        File file = new File(filePath);
         try (BufferedReader r = new BufferedReader(new FileReader(file))) {
             Stream<String> lines = r.lines();
             return Optional.of(lines.collect(Collectors.toList()));
@@ -20,7 +21,7 @@ public class Helpers {
         }
     }
 
-    public static <T> Optional<List<T>> getData(Class<T> cl,String filePath) {
+    public static <T> Optional<List<T>> getData(Class<T> cl, String filePath) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             List<T> data = (List<T>) ois.readObject();
             return Optional.of(data);
@@ -29,10 +30,10 @@ public class Helpers {
         }
     }
 
-    public static void saveData() {
+    public static <T> void saveData(List<T> data, String filePath) {
         try (ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream("src/main/java/database/users.bin"))) {
-            oos.writeObject(new ArrayList<User>());
+                new FileOutputStream(filePath))) {
+            oos.writeObject(data);
         } catch (FileNotFoundException exc) {
             System.out.println("File not found!");
         } catch (IOException exc) {
