@@ -27,16 +27,8 @@ public class Passenger implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSurname() {
         return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     @Override
@@ -44,11 +36,11 @@ public class Passenger implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Passenger)) return false;
         Passenger passenger = (Passenger) o;
-        return id.equals(passenger.id) && getName().equals(passenger.getName()) && getSurname().equals(passenger.getSurname());
+        return getId().equals(passenger.getId()) && getName().equals(passenger.getName()) && getSurname().equals(passenger.getSurname());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getName(), getSurname());
+        return Objects.hash(getId(), getName(), getSurname());
     }
 }

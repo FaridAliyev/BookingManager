@@ -4,7 +4,6 @@ import entities.User;
 import services.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserController {
     private final UserService userService;

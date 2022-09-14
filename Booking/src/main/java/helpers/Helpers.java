@@ -1,10 +1,6 @@
 package helpers;
 
-import entities.User;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,8 +27,7 @@ public class Helpers {
     }
 
     public static <T> void saveData(List<T> data, String filePath) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(filePath))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(data);
         } catch (FileNotFoundException exc) {
             System.out.println("File not found!");

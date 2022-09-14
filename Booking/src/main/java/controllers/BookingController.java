@@ -6,7 +6,6 @@ import services.BookingService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class BookingController {
     private final BookingService bookingService;
