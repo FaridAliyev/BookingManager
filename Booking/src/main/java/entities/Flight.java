@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Flight implements Serializable {
     private final UUID id;
@@ -16,7 +13,6 @@ public class Flight implements Serializable {
     private Airline airline;
     private int capacity;
     private String code;
-
     private String gate;
     private LocalDateTime departure;
     private List<Passenger> passengers;
@@ -73,6 +69,7 @@ public class Flight implements Serializable {
         return passengers;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,9 +88,11 @@ public class Flight implements Serializable {
         return String.format("%s\t%s\t%-15s\t%s", departure.format(formatter), code, to.name(), gate);
     }
 
-//    @Override
-//    public String toString() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-//        return String.format("%s\t", departure.format(formatter));
-//    }
+    @Override
+    public String toString() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        return String.format("Date: %s\nTime: %s\nFrom: %s (%s)\nDestination: %s (%s)\nAirline: %s\nAmount of free seats: %d\nGate: %s\n",
+                departure.format(dateFormatter), departure.format(timeFormatter), from.name(), from.getCode(), to.name(), to.getCode(), airline.name(), capacity - passengers.size(), gate);
+    }
 }

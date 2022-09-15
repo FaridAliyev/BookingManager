@@ -7,17 +7,15 @@ import entities.Flight;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RandomGenerator {
-    public static void main(String[] args) {
-        randomFlights(10).forEach(f -> System.out.println(f.toTableString()));
-    }
-
     private static final Random random = new Random();
 
     public static int randomIntBetween(int min, int max) {
@@ -63,7 +61,7 @@ public class RandomGenerator {
         Airline airline = randomAirline();
         int capacity = randomIntBetween(100, 200);
         String code = airline.getCode() + randomIntBetween(100, 999);
-        int randomInt = randomIntBetween(0, 50);
+        int randomInt = randomIntBetween(1, 50);
         String gate = randomUppercaseLetter(7) + (randomInt / 10 == 0 ? "0" : "") + String.valueOf(randomInt);
         LocalDate departureDate = randomLocalDateBetween(LocalDate.now(), LocalDate.now().plusDays(30));
         LocalTime departureTime = randomLocalTime();
@@ -72,9 +70,11 @@ public class RandomGenerator {
         return flight;
     }
 
-    public static List<Flight> randomFlights(int count) {
-        return IntStream.range(0, count)
+    public static List<Flight> randomFlights(int bound) {
+        Set<String> set = new HashSet<>();
+        return IntStream.range(0, bound)
                 .mapToObj(RandomGenerator::randomFlight)
+                .filter(f -> set.add(f.getCode()))
                 .collect(Collectors.toList());
     }
 }
