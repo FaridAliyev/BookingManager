@@ -9,7 +9,6 @@ public interface DAO<T> {
     Optional<T> get(UUID id);
     List<T> getAll();
     void save(T t);
-    boolean delete(T t);
     boolean delete(UUID id);
 }
 

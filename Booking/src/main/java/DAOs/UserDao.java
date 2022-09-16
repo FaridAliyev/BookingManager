@@ -33,15 +33,6 @@ public class UserDao implements DAO<User> {
     }
 
     @Override
-    public boolean delete(User user) {
-        if (users.contains(user)) {
-            users.remove(user);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public boolean delete(UUID id) {
         if (get(id).isEmpty()) return false;
         return users.removeIf(u -> u.getId() == id);

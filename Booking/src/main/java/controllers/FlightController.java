@@ -28,4 +28,8 @@ public class FlightController {
     public Optional<Flight> getFlightByCode(String code) {
         return flightService.getFlightByCode(code);
     }
+
+    public List<Flight> filterFlights(String city, LocalDate date, int ticketCount) {
+        return flightService.filterFlights(city, date, ticketCount);
+    }
 }

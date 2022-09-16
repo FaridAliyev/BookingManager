@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -7,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Flight implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529685098267757690L;
     private final UUID id;
     private Airport from;
     private Airport to;
@@ -69,6 +72,12 @@ public class Flight implements Serializable {
         return passengers;
     }
 
+    public boolean addPassenger(Passenger passenger) {
+        if (passengers.size() + 1 > capacity) {
+            return false;
+        }
+        return this.passengers.add(passenger);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -86,6 +95,12 @@ public class Flight implements Serializable {
     public String toTableString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return String.format("%s\t%s\t%-15s\t%s", departure.format(formatter), code, to.name(), gate);
+    }
+
+    public String toSearchString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return String.format("%s\t%s\t%s (%s) -------> %-10s (%s)\t%-23s\t\t%-4s\t\t%d",
+                code, departure.format(formatter), from.name(), from.getCode(), to.name(), to.getCode(), airline.name(), gate, capacity - passengers.size());
     }
 
     @Override

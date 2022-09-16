@@ -1,11 +1,14 @@
 package entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Booking implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529685098267757690L;
     private final UUID id;
     private LocalDateTime bookingDate;
     private Passenger passenger;

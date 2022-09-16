@@ -1,10 +1,13 @@
 package entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Passenger implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529685098267757690L;
     private final UUID id;
     private String name;
     private String surname;

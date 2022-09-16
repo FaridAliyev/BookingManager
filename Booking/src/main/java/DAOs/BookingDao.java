@@ -32,15 +32,6 @@ public class BookingDao implements DAO<Booking> {
     }
 
     @Override
-    public boolean delete(Booking booking) {
-        if (bookings.contains(booking)) {
-            bookings.remove(booking);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public boolean delete(UUID id) {
         if (get(id).isEmpty()) return false;
         return bookings.removeIf(b -> b.getId() == id);

@@ -15,6 +15,7 @@ import utils.Console;
 import utils.RandomGenerator;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class BookingManager {
                 switch (command) {
                     case 1 -> onlineBoard();
                     case 2 -> showFlightInfo();
-                    case 3 -> System.out.println(3);
+                    case 3 -> searchAndBook();
                     case 4 -> System.out.println(4);
                     case 5 -> myFlights();
                     case 6 -> logout();
@@ -66,11 +67,29 @@ public class BookingManager {
         }
     }
 
+    private void searchAndBook() {
+        System.out.println("Which city do you want to go to?");
+        String city = Console.next().toLowerCase();
+        System.out.println("Enter the date (format - dd/MM/yyyy  e.g. 16/09/2022):");
+        LocalDate date = Console.nextDate();
+        System.out.println("How many tickets do you want to buy?");
+        int ticketCount = Console.nextInt();
+        List<Flight> foundFlights = flightController.filterFlights(city, date, ticketCount);
+        if (foundFlights.size() == 0) {
+            System.out.println("No flights were found!");
+            return;
+        }
+        System.out.printf("Found %d flights:\n", foundFlights.size());
+        System.out.printf("%s\t%-16s\t%-19s %-19s\t%-20s\t\t%s\t\t%s\n",
+                "CODE", "DATE AND TIME", "FROM", "TO", "AIRLINE", "GATE", "№ OF FREE SEATS");
+        foundFlights.forEach(f-> System.out.println(f.toSearchString()));
+    }
+
     private void showFlightInfo() {
         System.out.println("Enter the flight code:");
         String code = Console.next().toUpperCase();
         Optional<Flight> flight = flightController.getFlightByCode(code);
-        if (flight.isEmpty()){
+        if (flight.isEmpty()) {
             System.out.println("Flight not found!");
             return;
         }
@@ -80,9 +99,14 @@ public class BookingManager {
 
     // todo: check what happens when no flight is found
     private void onlineBoard() {
+        List<Flight> flights = flightController.getFlightsToday();
+        if (flights.size() == 0) {
+            System.out.println("No more flights today! Come back tomorrow...");
+            return;
+        }
         System.out.print("Showing the timetable for today's flights:\n\n");
         System.out.printf("%s\t%s\t%-15s\t%s\n", "TIME", "CODE", "DESTINATION", "GATE");
-        flightController.getFlightsToday().forEach(f -> System.out.println(f.toTableString()));
+        flights.forEach(f -> System.out.println(f.toTableString()));
         System.out.println();
     }
 
