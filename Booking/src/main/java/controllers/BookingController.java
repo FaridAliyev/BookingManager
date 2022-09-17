@@ -5,10 +5,15 @@ import entities.User;
 import services.BookingService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BookingController {
     private final BookingService bookingService;
+
+    public Optional<Booking> getBooking(UUID id) {
+        return bookingService.getBooking(id);
+    }
 
     public List<Booking> getAllBookings() {
         return bookingService.getAllBookings();

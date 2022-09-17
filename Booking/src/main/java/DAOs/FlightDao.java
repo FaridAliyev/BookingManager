@@ -15,7 +15,7 @@ public class FlightDao implements DAO<Flight> {
 
     @Override
     public Optional<Flight> get(UUID id) {
-        return flights.stream().filter(f -> f.getId() == id).findAny();
+        return flights.stream().filter(f -> f.getId().equals(id)).findAny();
     }
 
     @Override
@@ -34,6 +34,6 @@ public class FlightDao implements DAO<Flight> {
     @Override
     public boolean delete(UUID id) {
         if (get(id).isEmpty()) return false;
-        return flights.removeIf(f -> f.getId() == id);
+        return flights.removeIf(f -> f.getId().equals(id));
     }
 }

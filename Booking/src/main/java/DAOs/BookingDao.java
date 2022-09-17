@@ -15,7 +15,7 @@ public class BookingDao implements DAO<Booking> {
 
     @Override
     public Optional<Booking> get(UUID id) {
-        return bookings.stream().filter(b -> b.getId() == id).findAny();
+        return bookings.stream().filter(b -> b.getId().equals(id)).findAny();
     }
 
     @Override
@@ -34,6 +34,6 @@ public class BookingDao implements DAO<Booking> {
     @Override
     public boolean delete(UUID id) {
         if (get(id).isEmpty()) return false;
-        return bookings.removeIf(b -> b.getId() == id);
+        return bookings.removeIf(b -> b.getId().equals(id));
     }
 }

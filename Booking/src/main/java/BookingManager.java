@@ -6,6 +6,7 @@ import controllers.FlightController;
 import controllers.UserController;
 import entities.Booking;
 import entities.Flight;
+import entities.Passenger;
 import entities.User;
 import helpers.Helpers;
 import services.BookingService;
@@ -16,9 +17,11 @@ import utils.RandomGenerator;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class BookingManager {
     private final List<String> guestMenu;
@@ -48,7 +51,7 @@ public class BookingManager {
                     case 1 -> onlineBoard();
                     case 2 -> showFlightInfo();
                     case 3 -> searchAndBook();
-                    case 4 -> System.out.println(4);
+                    case 4 -> cancelBooking();
                     case 5 -> myFlights();
                     case 6 -> logout();
                     case 7 -> exit();
@@ -67,6 +70,27 @@ public class BookingManager {
         }
     }
 
+    private void cancelBooking() {
+        List<Booking> bookings = bookingController.getBookingsByUser(userController.getCurrentUser());
+        if (bookings.size() == 0) {
+            System.out.println("You don't have any bookings!");
+            return;
+        }
+        bookings.forEach(b -> System.out.println(b.toCancelString()));
+        System.out.println("Enter the id of the booking you want to cancel:");
+        String input = Console.next();
+        UUID id = UUID.fromString(input);
+        Optional<Booking> optionalBooking = bookingController.getBooking(id);
+        boolean cancelled = bookingController.cancelBooking(id);
+        if (!cancelled) {
+            System.out.println("Something went wrong!");
+            return;
+        }
+        Booking booking = optionalBooking.get();
+        booking.getFlight().removePassenger(booking.getPassenger());
+        System.out.println("Successfully cancelled!");
+    }
+
     private void searchAndBook() {
         System.out.println("Which city do you want to go to?");
         String city = Console.next().toLowerCase();
@@ -82,7 +106,44 @@ public class BookingManager {
         System.out.printf("Found %d flights:\n", foundFlights.size());
         System.out.printf("%s\t%-16s\t%-19s %-19s\t%-20s\t\t%s\t\t%s\n",
                 "CODE", "DATE AND TIME", "FROM", "TO", "AIRLINE", "GATE", "№ OF FREE SEATS");
-        foundFlights.forEach(f-> System.out.println(f.toSearchString()));
+        foundFlights.forEach(f -> System.out.println(f.toSearchString()));
+        System.out.println("- 0. Return to main menu");
+        System.out.println("- 1. Book now");
+        int command = Console.nextInt();
+        switch (command) {
+            case 0 -> {
+                return;
+            }
+            case 1 -> {
+                bookFlights(ticketCount);
+            }
+        }
+    }
+
+    private void bookFlights(int ticketCount) {
+        System.out.println("Enter flight code:");
+        String code = Console.next().toUpperCase();
+        Optional<Flight> flightByCode = flightController.getFlightByCode(code);
+        if (flightByCode.isEmpty()) {
+            System.out.println("Flight not found!");
+            return;
+        }
+        Flight flight = flightByCode.get();
+        for (int i = 1; i <= ticketCount; i++) {
+            System.out.printf("Enter the name of passenger %d:\n", i);
+            String name = Console.next();
+            System.out.printf("Enter the surname of passenger %d:\n", i);
+            String surname = Console.next();
+            Passenger passenger = new Passenger(name, surname);
+            boolean hasSpace = flight.addPassenger(passenger);
+            if (!hasSpace) {
+                System.out.println("Flight is full now!");
+                return;
+            }
+            Booking booking = new Booking(LocalDateTime.now(), passenger, userController.getCurrentUser(), flight);
+            bookingController.book(booking);
+        }
+        System.out.println("Booked successfully!");
     }
 
     private void showFlightInfo() {
@@ -97,7 +158,6 @@ public class BookingManager {
     }
 
 
-    // todo: check what happens when no flight is found
     private void onlineBoard() {
         List<Flight> flights = flightController.getFlightsToday();
         if (flights.size() == 0) {
@@ -111,7 +171,12 @@ public class BookingManager {
     }
 
     private void myFlights() {
-        bookingController.getBookingsByUser(userController.getCurrentUser()).forEach(System.out::println);
+        List<Booking> bookings = bookingController.getBookingsByUser(userController.getCurrentUser());
+        if (bookings.size() == 0) {
+            System.out.println("No bookings to show!");
+            return;
+        }
+        bookings.forEach(System.out::println);
     }
 
     private void logout() {
@@ -146,6 +211,7 @@ public class BookingManager {
     private void exit() {
         Helpers.saveData(userController.getAllUsers(), "src/main/java/database/users.bin");
         Helpers.saveData(bookingController.getAllBookings(), "src/main/java/database/bookings.bin");
+        Helpers.saveData(flightController.getAllFlights(), "src/main/java/database/flights.bin");
         System.exit(0);
     }
 }

@@ -3,6 +3,7 @@ package entities;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -58,5 +59,17 @@ public class Booking implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getBookingDate(), getPassenger(), getUser(), getFlight());
+    }
+
+
+    public String toCancelString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return String.format("Id: %s\nFlight: %s\nBooking date: %s\nPassenger: %s\n----------------------------", id.toString(), flight.toBookingString(), bookingDate.format(formatter), passenger);
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return String.format("Flight: %s\nBooking date: %s\nPassenger: %s\n----------------------------", flight.toBookingString(), bookingDate.format(formatter), passenger);
     }
 }

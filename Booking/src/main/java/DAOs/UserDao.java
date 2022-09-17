@@ -16,7 +16,7 @@ public class UserDao implements DAO<User> {
 
     @Override
     public Optional<User> get(UUID id) {
-        return users.stream().filter(u -> u.getId() == id).findAny();
+        return users.stream().filter(u -> u.getId().equals(id)).findAny();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class UserDao implements DAO<User> {
     @Override
     public boolean delete(UUID id) {
         if (get(id).isEmpty()) return false;
-        return users.removeIf(u -> u.getId() == id);
+        return users.removeIf(u -> u.getId().equals(id));
     }
 
     public User getCurrentUser() {
