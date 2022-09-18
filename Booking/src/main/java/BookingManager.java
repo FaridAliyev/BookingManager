@@ -8,6 +8,7 @@ import entities.Booking;
 import entities.Flight;
 import entities.Passenger;
 import entities.User;
+import exceptions.InvalidMenuItemException;
 import helpers.Helpers;
 import services.BookingService;
 import services.FlightService;
@@ -44,28 +45,34 @@ public class BookingManager {
 
     public void run() {
         while (true) {
-            if (userController.isLoggedIn()) {
-                userMenu.forEach(System.out::println);
-                int command = Console.nextInt();
-                switch (command) {
-                    case 1 -> onlineBoard();
-                    case 2 -> showFlightInfo();
-                    case 3 -> searchAndBook();
-                    case 4 -> cancelBooking();
-                    case 5 -> myFlights();
-                    case 6 -> logout();
-                    case 7 -> exit();
+            try {
+                if (userController.isLoggedIn()) {
+                    userMenu.forEach(System.out::println);
+                    int command = Console.nextInt();
+                    switch (command) {
+                        case 1 -> onlineBoard();
+                        case 2 -> showFlightInfo();
+                        case 3 -> searchAndBook();
+                        case 4 -> cancelBooking();
+                        case 5 -> myFlights();
+                        case 6 -> logout();
+                        case 7 -> exit();
+                        default -> throw new InvalidMenuItemException("Menu item doesn't exist!");
+                    }
+                } else {
+                    guestMenu.forEach(System.out::println);
+                    int command = Console.nextInt();
+                    switch (command) {
+                        case 1 -> onlineBoard();
+                        case 2 -> showFlightInfo();
+                        case 3 -> login();
+                        case 4 -> register();
+                        case 5 -> exit();
+                        default -> throw new InvalidMenuItemException("Menu item doesn't exist!");
+                    }
                 }
-            } else {
-                guestMenu.forEach(System.out::println);
-                int command = Console.nextInt();
-                switch (command) {
-                    case 1 -> onlineBoard();
-                    case 2 -> showFlightInfo();
-                    case 3 -> login();
-                    case 4 -> register();
-                    case 5 -> exit();
-                }
+            } catch (InvalidMenuItemException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -81,6 +88,10 @@ public class BookingManager {
         String input = Console.next();
         UUID id = UUID.fromString(input);
         Optional<Booking> optionalBooking = bookingController.getBooking(id);
+        if (optionalBooking.isPresent() && !optionalBooking.get().getUser().equals(userController.getCurrentUser())) {
+            System.out.println("Something went wrong!");
+            return;
+        }
         boolean cancelled = bookingController.cancelBooking(id);
         if (!cancelled) {
             System.out.println("Something went wrong!");
@@ -110,13 +121,18 @@ public class BookingManager {
         System.out.println("- 0. Return to main menu");
         System.out.println("- 1. Book now");
         int command = Console.nextInt();
-        switch (command) {
-            case 0 -> {
-                return;
+        try{
+            switch (command) {
+                case 0 -> {
+                    return;
+                }
+                case 1 -> {
+                    bookFlights(ticketCount);
+                }
+                default -> throw new InvalidMenuItemException("Menu item doesn't exist!");
             }
-            case 1 -> {
-                bookFlights(ticketCount);
-            }
+        } catch (InvalidMenuItemException e) {
+            System.out.println(e.getMessage());
         }
     }
 
