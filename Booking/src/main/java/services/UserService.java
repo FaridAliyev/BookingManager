@@ -21,16 +21,16 @@ public class UserService {
         return userDao.getCurrentUser() != null;
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return userDao.getCurrentUser();
     }
 
-    public boolean register(String username, String password) {
-        Optional<User> user = userDao.getAll().stream().filter(u -> u.getUsername().equals(username)).findAny();
-        if (user.isPresent()) {
+    public boolean register(User user) {
+        Optional<User> optionalUser = userDao.getAll().stream().filter(u -> u.getUsername().equals(user.getUsername())).findAny();
+        if (optionalUser.isPresent()) {
             return false;
         }
-        userDao.save(new User(username, password));
+        userDao.save(user);
         return true;
     }
 

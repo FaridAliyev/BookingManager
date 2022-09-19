@@ -121,7 +121,7 @@ public class BookingManager {
         System.out.println("- 0. Return to main menu");
         System.out.println("- 1. Book now");
         int command = Console.nextInt();
-        try{
+        try {
             switch (command) {
                 case 0 -> {
                     return;
@@ -217,7 +217,7 @@ public class BookingManager {
         String username = Console.next(4);
         System.out.println("Enter password (must be at least 4 characters long):");
         String password = Console.next(4);
-        if (!userController.register(username, password)) {
+        if (!userController.register(new User(username, password))) {
             System.out.println("Username already exists!");
             return;
         }
